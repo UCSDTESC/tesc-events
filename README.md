@@ -35,4 +35,4 @@ DB_PASS=password
 **NOTE**: For Windows users, `localhost` won't work&mdash;you'll need to set `DB_HOST` to the Docker machine's IP address
 
 1. Run `docker network inspect -f '{{range .IPAM.Config}}{{.Subnet}}{{end}}' tescevents_default`.
-2. Set `DB_HOST={{ip without subnet mask}}`.
+2. Set `DB_HOST={{ip without subnet mask}}` in your `.env` file.
