@@ -10,6 +10,6 @@ public class RepositoryContext : DbContext {
     protected override void OnConfiguring(DbContextOptionsBuilder options) {
         options.UseNpgsql(AppSettings.ConnectionString);
     }
-    
+
     public DbSet<Event>? Events { get; set; }
 }
