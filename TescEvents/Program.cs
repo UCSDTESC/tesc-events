@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TescEvents.Entities;
 using TescEvents.Repositories;
 using TescEvents.Utilities;
@@ -10,7 +11,8 @@ var dotenv = Path.Combine(root, ".env");
 DotEnv.Load(dotenv);
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<RepositoryContext>();
+builder.Services.AddDbContext<RepositoryContext>(options => 
+                                                     options.UseNpgsql(builder.Configuration.GetConnectionString("RepositoryContext")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
