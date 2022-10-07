@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TescEvents.Entities;
 using TescEvents.Repositories;
 using TescEvents.Utilities;
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<RepositoryContext>(options =>
                                                      options.UseNpgsql(AppSettings.ConnectionString));
 
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     
 builder.Configuration.AddEnvironmentVariables();
 
