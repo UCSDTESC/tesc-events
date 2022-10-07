@@ -14,7 +14,7 @@ public class EventsController : ControllerBase {
     }
     
     [HttpGet(Name = nameof(GetEvents))]
-    public IEnumerable<Event> GetEvents(string? start = "", string? end = "") {
+    public IActionResult GetEvents(string? start = "", string? end = "") {
         if (!DateTime.TryParse(start, out var startFilter)) {
             startFilter = DateTime.UnixEpoch;
         }
@@ -23,6 +23,7 @@ public class EventsController : ControllerBase {
             endFilter = DateTime.Now;
         }
 
-        return eventRepository.FindByCondition(e => e.Start >= startFilter && e.End <= endFilter);
+        return Ok(eventRepository.FindByCondition(e => e.Start >= startFilter.ToUniversalTime() && e.End <= endFilter
+                                                      .ToUniversalTime()));
     }
 }
