@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+
+  db:
+    container_name: db.tesc-events.local
+    image: postgres:14.5
+    restart: always
+    ports:
+      - '${DB_PORT}:5432'
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
