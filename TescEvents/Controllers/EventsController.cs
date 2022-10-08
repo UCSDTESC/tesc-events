@@ -25,4 +25,15 @@ public class EventsController : ControllerBase {
 
         return eventRepository.FindByCondition(e => e.Start >= startFilter && e.End <= endFilter);
     }
+
+    [HttpPost(Name = nameof(CreateEvent))]
+    public IActionResult CreateEvent(Event? e) {
+        if (e == null) return BadRequest();
+        
+        // TODO: Use automapper
+        eventRepository.Create(e);
+        eventRepository.Save();
+
+        return CreatedAtRoute(nameof(GetEvents), new { id = e.Id }, e);
+    }
 }
