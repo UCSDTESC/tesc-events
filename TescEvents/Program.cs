@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TescEvents.Entities;
@@ -6,6 +7,7 @@ using TescEvents.Models;
 using TescEvents.Repositories;
 using TescEvents.Utilities;
 using TescEvents.Utilities.Profiles;
+using TescEvents.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,10 @@ builder.Services.AddDbContext<RepositoryContext>(options =>
                                                      options.UseNpgsql(AppSettings.ConnectionString));
 
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+
+// Add validators
+builder.Services.AddScoped<IValidator<Event>, EventValidator>();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     
 builder.Configuration.AddEnvironmentVariables();

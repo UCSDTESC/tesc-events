@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TescEvents.DTOs;
@@ -13,10 +15,12 @@ namespace TescEvents.Controllers;
 public class EventsController : ControllerBase {
     private readonly IEventRepository eventRepository;
     private readonly IMapper mapper;
+    private readonly IValidator<Event> validator;
 
-    public EventsController(IEventRepository eventRepository, IMapper mapper) {
+    public EventsController(IEventRepository eventRepository, IMapper mapper, IValidator<Event> validator) {
         this.eventRepository = eventRepository;
         this.mapper = mapper;
+        this.validator = validator;
     }
     
     [HttpGet(Name = nameof(GetEvents))]
@@ -34,11 +38,16 @@ public class EventsController : ControllerBase {
     }
 
     [HttpPost(Name = nameof(CreateEvent))]
-    public async Task<IActionResult> CreateEvent(EventCreateRequestDTO e) {
+    public async Task<IActionResult> CreateEvent([Required] [FromForm] EventCreateRequestDTO e) {
         var eventEntity = mapper.Map<Event>(e);
+        var validationResult = await validator.ValidateAsync(eventEntity);
+
+        if (!validationResult.IsValid) return BadRequest(
+                                                         validationResult.Errors.Select(error => error.ErrorMessage));
         
         // TODO: Abstract into service transaction and async call
         eventRepository.Create(eventEntity);
+        // TODO: Upload image to AWS
         eventRepository.Save();
 
         var eventResponse = mapper.Map<EventPublicResponseDTO>(eventEntity);

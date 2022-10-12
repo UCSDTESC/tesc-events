@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace TescEvents.DTOs.Events; 
 
 public class EventCreateRequestDTO {
