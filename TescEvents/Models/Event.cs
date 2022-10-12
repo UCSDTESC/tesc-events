@@ -28,3 +28,11 @@ public class Event {
 
     public bool Archived { get; set; } = false;
 }
+
+public class EventRequestDTO {
+    
+}
+
+public class EventResponseDTO {
+    public Guid Id { get; set; }
+}

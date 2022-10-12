@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TescEvents.Models;
 using TescEvents.Repositories;
+using TescEvents.Utilities;
 
 namespace TescEvents.Controllers; 
 
@@ -8,9 +9,11 @@ namespace TescEvents.Controllers;
 [Route("/api/[controller]")]
 public class EventsController : ControllerBase {
     private readonly IEventRepository eventRepository;
+    private readonly IMapper mapper;
 
-    public EventsController(IEventRepository eventRepository) {
+    public EventsController(IEventRepository eventRepository, IMapper mapper) {
         this.eventRepository = eventRepository;
+        this.mapper = mapper;
     }
     
     [HttpGet(Name = nameof(GetEvents))]
@@ -23,17 +26,22 @@ public class EventsController : ControllerBase {
             endFilter = DateTime.Now;
         }
 
-        return eventRepository.FindByCondition(e => e.Start >= startFilter && e.End <= endFilter);
+        return eventRepository.FindByCondition(
+                                               e => e.Start >= startFilter 
+                                                    && e.End <= endFilter);
     }
 
     [HttpPost(Name = nameof(CreateEvent))]
-    public IActionResult CreateEvent(Event? e) {
+    public IActionResult CreateEvent(EventRequestDTO? e) {
         if (e == null) return BadRequest();
+
+        var eventEntity = mapper.Map<Event>(e);
         
-        // TODO: Use automapper
-        eventRepository.Create(e);
+        eventRepository.Create(eventEntity);
         eventRepository.Save();
 
-        return CreatedAtRoute(nameof(GetEvents), new { id = e.Id }, e);
+        var createdEvent = mapper.Map<EventResponseDTO>(eventEntity);
+
+        return CreatedAtRoute(nameof(GetEvents), new { id = createdEvent.Id }, createdEvent);
     }
 }
