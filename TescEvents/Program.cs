@@ -1,9 +1,11 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TescEvents.Entities;
 using TescEvents.Models;
 using TescEvents.Repositories;
 using TescEvents.Utilities;
+using TescEvents.Utilities.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 var root = Directory.GetCurrentDirectory();
 var dotenv = Path.Combine(root, ".env");
 DotEnv.Load(dotenv);
+
+// Add Automapper configuration
+builder.Services.AddAutoMapper(typeof(EventProfile));
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<RepositoryContext>(options => 
