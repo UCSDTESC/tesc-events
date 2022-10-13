@@ -11,4 +11,6 @@ public static class AppSettings {
             return $"Host={host};Port={port};Database={database};Username={user};Password={pass}";
         }
     }
+
+    public const int VALID_JWT_LENGTH_DAYS = 14;
 }
