@@ -11,4 +11,10 @@ public class UserRepository : RepositoryBase<User>, IUserRepository {
         return FindByCondition(user => user.Username == username)
             .FirstOrDefault();
     }
+
+    public void CreateUser(User user) {
+        Create(user);
+        Save();
+    }
+
 }

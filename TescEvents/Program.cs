@@ -18,16 +18,18 @@ var dotenv = Path.Combine(root, ".env");
 DotEnv.Load(dotenv);
 
 // Add Automapper configuration
-builder.Services.AddAutoMapper(typeof(EventProfile));
+builder.Services.AddAutoMapper(typeof(EventProfile), typeof(UserProfile));
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<RepositoryContext>(options => 
                                                      options.UseNpgsql(AppSettings.ConnectionString));
 
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Add validators
 builder.Services.AddScoped<IValidator<Event>, EventValidator>();
+builder.Services.AddScoped<IValidator<User>, UserValidator>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     
