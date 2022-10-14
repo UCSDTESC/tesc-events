@@ -12,6 +12,11 @@ public class UserRepository : RepositoryBase<User>, IUserRepository {
             .FirstOrDefault();
     }
 
+    public User? GetUserByUuid(Guid uuid) {
+        return FindByCondition(user => user.Id == uuid)
+            .FirstOrDefault();
+    }
+
     public void CreateUser(User user) {
         Create(user);
         Save();

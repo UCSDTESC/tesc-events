@@ -52,7 +52,7 @@ public class AuthController : ControllerBase {
     [AllowAnonymous]
     [HttpGet("/user/{uuid}", Name = nameof(GetUser))]
     public async Task<IActionResult> GetUser(string uuid) {
-        var user = userRepository.GetUserByUuid(uuid);
+        var user = userRepository.GetUserByUuid(Guid.Parse(uuid));
         if (user == null) return NotFound();
 
         var userResponse = mapper.Map<UserResponseDTO>(user);

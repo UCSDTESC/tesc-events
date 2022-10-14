@@ -15,7 +15,7 @@ public interface IUserRepository : IRepositoryBase<User> {
     /// </summary>
     /// <param name="uuid"></param>
     /// <returns>User matching uuid, or null if not found</returns>
-    User? GetUserByUuid(string uuid);
+    User? GetUserByUuid(Guid uuid);
 
     /// <summary>
     /// Inserts a User entity in the database
