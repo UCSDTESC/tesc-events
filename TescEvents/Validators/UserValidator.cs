@@ -7,7 +7,7 @@ namespace TescEvents.Validators;
 public class UserValidator : AbstractValidator<User> {
     public UserValidator(IUserRepository userRepository) {
         // TODO: Insert user validation rules
-        RuleFor(u => userRepository.GetUserByUuid(u.Id))
+        RuleFor(u => userRepository.GetUserByUsername(u.Username))
             .Null();
     }
 }
