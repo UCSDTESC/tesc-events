@@ -58,7 +58,7 @@ public class AuthController : ControllerBase {
     [HttpPost(Name = nameof(AuthenticateUser))]
     public async Task<IActionResult> AuthenticateUser([FromForm] string username, [FromForm] string password) {
         var user = userRepository.GetUserByUsername(username);
-        if (user == null) return Unauthorized();
+        if (user == null) return NotFound();
 
         if (HashPassword(password, user.Salt) != user.PasswordHash) return Unauthorized();
         
