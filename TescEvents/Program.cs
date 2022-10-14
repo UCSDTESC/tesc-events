@@ -86,5 +86,15 @@ void SeedDb() {
         Start = new DateTime(2022, 9, 29, 11, 0, 0).ToUniversalTime(),
         End = new DateTime(2022, 9, 23, 14, 0, 0).ToUniversalTime()
     });
+    
+    context.Users.AddRange(new User {
+        Id = Guid.NewGuid(),
+        Username = "sek007@ucsd.edu",
+        FirstName = "Shane",
+        LastName = "Kim",
+        PasswordHash = "",
+        Salt = "reallygoodsalt",
+        UserType = UserTypes.REGULAR
+    });
     context.SaveChanges();
 }
