@@ -6,8 +6,9 @@ namespace TescEvents.Validators;
 
 public class UserValidator : AbstractValidator<User> {
     public UserValidator(IUserRepository userRepository) {
-        // TODO: Insert user validation rules
-        RuleFor(u => userRepository.GetUserByUsername(u.Username))
-            .Null();
+        RuleFor(u => u.Username)
+            .EmailAddress()
+            .Must(u => userRepository.GetUserByUsername(u) == null)
+            .WithMessage("User already exists with that username");
     }
 }

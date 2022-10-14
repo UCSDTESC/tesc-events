@@ -31,7 +31,7 @@ public class AuthController : ControllerBase {
     }
 
     [AllowAnonymous]
-    [HttpPost(Name = nameof(RegisterUser))]
+    [HttpPost("register", Name = nameof(RegisterUser))]
     public async Task<IActionResult> RegisterUser([Required] [FromForm] UserCreateRequestDTO userReq) {
         var userEntity = mapper.Map<User>(userReq);
         
@@ -46,17 +46,12 @@ public class AuthController : ControllerBase {
         userRepository.CreateUser(userEntity);
 
         var userResponse = mapper.Map<UserResponseDTO>(userEntity);
-        return CreatedAtRoute(nameof(GetUser), new { Id = userResponse.Id }, userResponse);
-    }
-
-    [AllowAnonymous]
-    [HttpGet("/user/{uuid}", Name = nameof(GetUser))]
-    public async Task<IActionResult> GetUser(string uuid) {
-        var user = userRepository.GetUserByUuid(Guid.Parse(uuid));
-        if (user == null) return NotFound();
-
-        var userResponse = mapper.Map<UserResponseDTO>(user);
-        return Ok(userResponse);
+        return CreatedAtRoute(new {
+                                  action = "GetUser",
+                                  controller = "Users",
+                                  userResponse.Id
+                              }, 
+        userResponse);
     }
     
     [AllowAnonymous]
