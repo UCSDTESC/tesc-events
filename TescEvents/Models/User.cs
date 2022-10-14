@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace TescEvents.Models; 
 
 [Table("Users")]
+[Index(nameof(Username), IsUnique = true)]
 public class User {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
