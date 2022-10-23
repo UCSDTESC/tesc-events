@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TescEvents.Entities;
@@ -11,9 +12,10 @@ using TescEvents.Entities;
 namespace TescEvents.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("0003-AddEventRegistrationsTable")]
+    partial class AddEventRegistrationsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,7 +68,7 @@ namespace TescEvents.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Events", (string)null);
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("TescEvents.Models.EventRegistrations", b =>
@@ -95,7 +97,7 @@ namespace TescEvents.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("EventRegistrations", (string)null);
+                    b.ToTable("EventRegistrations");
                 });
 
             modelBuilder.Entity("TescEvents.Models.Student", b =>
@@ -106,7 +108,7 @@ namespace TescEvents.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("TescEvents.Models.EventRegistrations", b =>
