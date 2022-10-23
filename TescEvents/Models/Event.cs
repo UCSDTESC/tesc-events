@@ -27,4 +27,12 @@ public class Event {
     public DateTime End { get; set; }
 
     public bool Archived { get; set; } = false;
+
+    public bool RequiresApplication { get; set; } = false;
+    
+    public DateTime? ApplicationOpenDate { get; set; }
+    
+    public DateTime? ApplicationCloseDate { get; set; }
+
+    public bool AcceptingApplications { get; set; } = false;
 }
