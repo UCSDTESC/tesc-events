@@ -20,12 +20,12 @@ namespace TescEvents.Controllers;
 [ApiController]
 [Route("/api/[controller]")]
 public class AuthController : ControllerBase {
-    private readonly IUserRepository userRepository;
-    private readonly IValidator<User> userValidator;
+    private readonly IStudentRepository studentRepository;
+    private readonly IValidator<Student> userValidator;
     private readonly IMapper mapper;
     
-    public AuthController(IUserRepository userRepository, IMapper mapper, IValidator<User> userValidator) {
-        this.userRepository = userRepository;
+    public AuthController(IStudentRepository studentRepository, IMapper mapper, IValidator<Student> userValidator) {
+        this.studentRepository = studentRepository;
         this.mapper = mapper;
         this.userValidator = userValidator;
     }
@@ -33,7 +33,7 @@ public class AuthController : ControllerBase {
     [AllowAnonymous]
     [HttpPost("register", Name = nameof(RegisterUser))]
     public async Task<IActionResult> RegisterUser([Required] [FromForm] UserCreateRequestDTO userReq) {
-        var userEntity = mapper.Map<User>(userReq);
+        var userEntity = mapper.Map<Student>(userReq);
         
         var validationResult = await userValidator.ValidateAsync(userEntity);
         if (!validationResult.IsValid) return BadRequest(
@@ -43,7 +43,7 @@ public class AuthController : ControllerBase {
         var salt = GenerateSalt();
         userEntity.Salt = salt;
         userEntity.PasswordHash = HashPassword(userReq.Password, salt);
-        userRepository.CreateUser(userEntity);
+        studentRepository.CreateUser(userEntity);
 
         var userResponse = mapper.Map<UserResponseDTO>(userEntity);
         return CreatedAtRoute(new {
@@ -57,7 +57,7 @@ public class AuthController : ControllerBase {
     [AllowAnonymous]
     [HttpPost(Name = nameof(AuthenticateUser))]
     public async Task<IActionResult> AuthenticateUser([FromForm] string username, [FromForm] string password) {
-        var user = userRepository.GetUserByUsername(username);
+        var user = studentRepository.GetUserByUsername(username);
         if (user == null) return NotFound();
 
         if (HashPassword(password, user.Salt) != user.PasswordHash) return Unauthorized();

@@ -25,11 +25,11 @@ builder.Services.AddDbContext<RepositoryContext>(options =>
                                                      options.UseNpgsql(AppSettings.ConnectionString));
 
 builder.Services.AddScoped<IEventRepository, EventRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 
 // Add validators
 builder.Services.AddScoped<IValidator<Event>, EventValidator>();
-builder.Services.AddScoped<IValidator<User>, UserValidator>();
+builder.Services.AddScoped<IValidator<Student>, UserValidator>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     
@@ -89,7 +89,7 @@ void SeedDb() {
         End = new DateTime(2022, 9, 23, 14, 0, 0).ToUniversalTime()
     });
     
-    context.Users.AddRange(new User {
+    context.Students.AddRange(new Student {
         Id = Guid.NewGuid(),
         Username = "sek007@ucsd.edu",
         FirstName = "Shane",

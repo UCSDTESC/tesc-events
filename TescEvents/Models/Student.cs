@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TescEvents.Models; 
 
-[Table("Users")]
+[Table("Students")]
 [Index(nameof(Username), IsUnique = true)]
-public class User {
+public class Student {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
     public Guid Id { get; set; }
@@ -28,10 +28,26 @@ public class User {
 
     [Required]
     public string UserType { get; set; } = UserTypes.REGULAR;
+    
+    public string Year { get; set; }
+    
+    public string University { get; set; }
+    
+    public string Phone { get; set; }
+    
+    public string GPA { get; set; }
+    
+    public string PID { get; set; }
+    
+    public string Gender { get; set; }
+    
+    public string Pronouns { get; set; }
+    
+    public string Ethnicity { get; set; }
 }
 
 public class UserTypes {
     public const string REGULAR = "REGULAR";
     public const string ADMIN = "ADMIN";
-    public const string COORDINATOR = "COORDINATOR";
+    public const string ORGANIZER = "ORGANIZER";
 }
