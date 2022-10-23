@@ -30,6 +30,11 @@ DB_PORT=5432
 DB_DATABASE=tesc-events
 DB_USER=tesc-dev
 DB_PASS=password
+
+# JWT_KEY must be at least 128 bits long (16 characters)
+JWT_KEY=superultrahypermetasecretkey
+JWT_AUDIENCE=https://localhost:7208
+JWT_ISSUER=https://localhost:7208
 ```
 
 **NOTE**: For Windows users, `localhost` won't work&mdash;you'll need to set `DB_HOST` to the Docker machine's IP address
