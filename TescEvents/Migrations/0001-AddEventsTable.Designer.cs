@@ -12,8 +12,8 @@ using TescEvents.Entities;
 namespace TescEvents.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20221007021603_0001-AddEventsTable")]
-    partial class _0001AddEventsTable
+    [Migration("0001-AddEventsTable")]
+    partial class AddEventsTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

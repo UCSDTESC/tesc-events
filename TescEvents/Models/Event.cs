@@ -16,8 +16,11 @@ public class Event {
     [Column(TypeName = "text")] 
     public string Description { get; set; } = "";
 
+    
+    [MaxLength(255)]
     public string? Thumbnail { get; set; }
     
+    [MaxLength(255)]
     public string? Cover { get; set; }
 
     [Required]
