@@ -10,17 +10,6 @@ namespace TescEvents.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Students",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Students", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "EventRegistrations",
                 columns: table => new
                 {
@@ -59,13 +48,9 @@ namespace TescEvents.Migrations
                 column: "StudentId");
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
-                name: "EventRegistrations");
-
-            migrationBuilder.DropTable(
-                name: "Students");
+                                       name: "EventRegistrations");
         }
     }
 }

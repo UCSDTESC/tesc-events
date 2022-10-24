@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TescEvents.Entities;
@@ -11,9 +12,10 @@ using TescEvents.Entities;
 namespace TescEvents.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("0003-RenameUsersToStudentsAndUseVarChars")]
+    partial class RenameUsersToStudentsAndUseVarChars
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,15 +29,6 @@ namespace TescEvents.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<bool>("AcceptingApplications")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("ApplicationCloseDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("ApplicationOpenDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("Archived")
                         .HasColumnType("boolean");
@@ -51,9 +44,6 @@ namespace TescEvents.Migrations
                     b.Property<DateTime>("End")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("RequiresApplication")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTime>("Start")
                         .HasColumnType("timestamp with time zone");
 
@@ -68,66 +58,7 @@ namespace TescEvents.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Events", (string)null);
-                });
-
-            modelBuilder.Entity("TescEvents.Models.EventRegistrations", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsResumeSanitized")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("UserStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId")
-                        .IsUnique();
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("EventRegistrations", (string)null);
-                });
-
-            modelBuilder.Entity("TescEvents.Models.Student", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Students", (string)null);
-                });
-
-            modelBuilder.Entity("TescEvents.Models.EventRegistrations", b =>
-                {
-                    b.HasOne("TescEvents.Models.Event", "Event")
-                        .WithMany()
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TescEvents.Models.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-
-                    b.Navigation("Student");
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("TescEvents.Models.Student", b =>

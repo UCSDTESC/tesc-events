@@ -1,7 +1,8 @@
-using AutoMapper;
+using System.Text;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using TescEvents.Entities;
 using TescEvents.Models;
 using TescEvents.Repositories;
@@ -17,20 +18,41 @@ var dotenv = Path.Combine(root, ".env");
 DotEnv.Load(dotenv);
 
 // Add Automapper configuration
-builder.Services.AddAutoMapper(typeof(EventProfile));
+builder.Services.AddAutoMapper(typeof(EventProfile), typeof(UserProfile));
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<RepositoryContext>(options => 
                                                      options.UseNpgsql(AppSettings.ConnectionString));
 
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 
 // Add validators
 builder.Services.AddScoped<IValidator<Event>, EventValidator>();
+builder.Services.AddScoped<IValidator<Student>, UserValidator>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     
 builder.Configuration.AddEnvironmentVariables();
+
+builder.Services.AddAuthentication(options => {
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options => {
+    options.TokenValidationParameters = new TokenValidationParameters {
+        ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+        ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY") 
+                                   ?? throw new InvalidOperationException("JWT_KEY is invalid"))
+            ),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = false,
+        ValidateIssuerSigningKey = true,
+    };
+});
 
 var app = builder.Build();
 
@@ -65,6 +87,16 @@ void SeedDb() {
         Title = "Event 3",
         Start = new DateTime(2022, 9, 29, 11, 0, 0).ToUniversalTime(),
         End = new DateTime(2022, 9, 23, 14, 0, 0).ToUniversalTime()
+    });
+    
+    context.Students.AddRange(new Student {
+        Id = Guid.NewGuid(),
+        Username = "sek007@ucsd.edu",
+        FirstName = "Shane",
+        LastName = "Kim",
+        PasswordHash = "",
+        Salt = "reallygoodsalt",
+        UserType = UserTypes.REGULAR
     });
     context.SaveChanges();
 }
