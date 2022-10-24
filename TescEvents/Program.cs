@@ -29,7 +29,7 @@ builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 
 // Add validators
 builder.Services.AddScoped<IValidator<Event>, EventValidator>();
-builder.Services.AddScoped<IValidator<Student>, UserValidator>();
+builder.Services.AddScoped<IValidator<Student>, StudentValidator>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     

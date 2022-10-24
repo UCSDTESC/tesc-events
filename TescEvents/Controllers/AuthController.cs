@@ -21,13 +21,13 @@ namespace TescEvents.Controllers;
 [Route("/api/[controller]")]
 public class AuthController : ControllerBase {
     private readonly IStudentRepository studentRepository;
-    private readonly IValidator<Student> userValidator;
+    private readonly IValidator<Student> studentValidator;
     private readonly IMapper mapper;
     
-    public AuthController(IStudentRepository studentRepository, IMapper mapper, IValidator<Student> userValidator) {
+    public AuthController(IStudentRepository studentRepository, IMapper mapper, IValidator<Student> studentValidator) {
         this.studentRepository = studentRepository;
         this.mapper = mapper;
-        this.userValidator = userValidator;
+        this.studentValidator = studentValidator;
     }
 
     [AllowAnonymous]
@@ -35,7 +35,7 @@ public class AuthController : ControllerBase {
     public async Task<IActionResult> RegisterUser([Required] [FromForm] UserCreateRequestDTO userReq) {
         var userEntity = mapper.Map<Student>(userReq);
         
-        var validationResult = await userValidator.ValidateAsync(userEntity);
+        var validationResult = await studentValidator.ValidateAsync(userEntity);
         if (!validationResult.IsValid) return BadRequest(
                                                          validationResult.Errors
                                                                          .Select(error => error.ErrorMessage));
