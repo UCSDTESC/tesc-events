@@ -37,6 +37,7 @@ public class EventsController : ControllerBase {
                                                        && e.End <= endFilter.ToUniversalTime()));
     }
 
+    [Authorize]
     [HttpPost(Name = nameof(CreateEvent))]
     public async Task<IActionResult> CreateEvent([Required] [FromForm] EventCreateRequestDTO e) {
         var eventEntity = mapper.Map<Event>(e);
