@@ -1,11 +1,13 @@
 using System.Text;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TescEvents.Entities;
 using TescEvents.Models;
 using TescEvents.Repositories;
+using TescEvents.Services;
 using TescEvents.Utilities;
 using TescEvents.Utilities.Profiles;
 using TescEvents.Validators;
@@ -26,6 +28,7 @@ builder.Services.AddDbContext<RepositoryContext>(options =>
 
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<IEventRegistrationRepository, EventRegistrationRepository>();
 
 // Add validators
 builder.Services.AddScoped<IValidator<Event>, EventValidator>();
@@ -53,6 +56,7 @@ builder.Services.AddAuthentication(options => {
         ValidateIssuerSigningKey = true,
     };
 });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -60,8 +64,8 @@ if (app.Environment.IsDevelopment()) SeedDb();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

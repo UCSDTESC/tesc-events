@@ -6,7 +6,7 @@ namespace TescEvents.Models;
 
 [Table("EventRegistrations")]
 [Index(nameof(EventId), IsUnique = true)]
-public class EventRegistrations {
+public class EventRegistration {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
     public Guid Id { get; set; }
@@ -17,7 +17,7 @@ public class EventRegistrations {
     
     [ForeignKey(nameof(Event))]
     public Guid EventId { get; set; }
-    public Event Event { get; set; } // Navigation property
+    public Event? Event { get; set; } // Navigation property
 
     public string UserStatus { get; set; } = UserStatuses.PENDING;
 

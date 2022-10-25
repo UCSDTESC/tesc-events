@@ -12,6 +12,6 @@ public class RepositoryContext : DbContext {
     }
 
     public DbSet<Event>? Events { get; set; }
-    public DbSet<EventRegistrations>? EventRegistrations { get; set; }
+    public DbSet<EventRegistration>? EventRegistrations { get; set; }
     public DbSet<Student>? Students { get; set; }
 }

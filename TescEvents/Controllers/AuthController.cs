@@ -67,8 +67,8 @@ public class AuthController : ControllerBase {
         var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY")!);
         var tokenDescriptor = new SecurityTokenDescriptor {
             Subject = new ClaimsIdentity(new[] {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-                new Claim(JwtRegisteredClaimNames.Jti, new Guid().ToString()),
+                new Claim(ClaimTypes.Actor, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
             }),
             Expires = DateTime.UtcNow.AddMinutes(AppSettings.VALID_JWT_LENGTH_DAYS),
             Issuer = issuer,
