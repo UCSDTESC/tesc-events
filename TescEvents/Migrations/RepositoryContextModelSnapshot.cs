@@ -68,10 +68,10 @@ namespace TescEvents.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Events", (string)null);
+                    b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("TescEvents.Models.EventRegistrations", b =>
+            modelBuilder.Entity("TescEvents.Models.EventRegistration", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,37 +97,7 @@ namespace TescEvents.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("EventRegistrations", (string)null);
-                });
-
-            modelBuilder.Entity("TescEvents.Models.Student", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Students", (string)null);
-                });
-
-            modelBuilder.Entity("TescEvents.Models.EventRegistrations", b =>
-                {
-                    b.HasOne("TescEvents.Models.Event", "Event")
-                        .WithMany()
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TescEvents.Models.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-
-                    b.Navigation("Student");
+                    b.ToTable("EventRegistrations");
                 });
 
             modelBuilder.Entity("TescEvents.Models.Student", b =>
@@ -210,6 +180,25 @@ namespace TescEvents.Migrations
                         .IsUnique();
 
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("TescEvents.Models.EventRegistration", b =>
+                {
+                    b.HasOne("TescEvents.Models.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TescEvents.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("Student");
                 });
 #pragma warning restore 612, 618
         }

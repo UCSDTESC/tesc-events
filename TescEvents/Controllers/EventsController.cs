@@ -69,7 +69,6 @@ public class EventsController : ControllerBase {
     [HttpPost("event/{eventId}/register", Name = nameof(RegisterForEvent))]
     public async Task<IActionResult> RegisterForEvent(string eventId) {
         var _event = eventRepository.FindByCondition(e => e.Id == Guid.Parse(eventId))
-                                    .AsNoTracking()
                                     .FirstOrDefault();
         if (_event == null) return NotFound();
 

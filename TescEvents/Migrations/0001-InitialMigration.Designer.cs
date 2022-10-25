@@ -12,8 +12,8 @@ using TescEvents.Entities;
 namespace TescEvents.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("0004-AddEventRegistrationsTable")]
-    partial class AddEventRegistrationsTable
+    [Migration("0001-InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,7 +43,8 @@ namespace TescEvents.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Cover")
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -59,7 +60,8 @@ namespace TescEvents.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Thumbnail")
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -71,7 +73,7 @@ namespace TescEvents.Migrations
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("TescEvents.Models.EventRegistrations", b =>
+            modelBuilder.Entity("TescEvents.Models.EventRegistration", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,12 +108,83 @@ namespace TescEvents.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Ethnicity")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("GPA")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("PID")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Pronouns")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("University")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Year")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("TescEvents.Models.EventRegistrations", b =>
+            modelBuilder.Entity("TescEvents.Models.EventRegistration", b =>
                 {
                     b.HasOne("TescEvents.Models.Event", "Event")
                         .WithMany()

@@ -11,13 +11,15 @@ public class EventRegistration {
     [Key]
     public Guid Id { get; set; }
     
-    [ForeignKey(nameof(Student))]
     public Guid StudentId { get; set; }
+    
+    [ForeignKey(nameof(StudentId))]
     public Student Student { get; set; }
     
-    [ForeignKey(nameof(Event))]
     public Guid EventId { get; set; }
-    public Event? Event { get; set; } // Navigation property
+    
+    [ForeignKey(nameof(EventId))]
+    public Event Event { get; set; } // Navigation property
 
     public string UserStatus { get; set; } = UserStatuses.PENDING;
 

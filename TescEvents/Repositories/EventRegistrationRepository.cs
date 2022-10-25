@@ -9,12 +9,11 @@ public class EventRegistrationRepository : RepositoryBase<EventRegistration>, IE
 
     public void RegisterStudentForEvent(Student student, Event e) {
         Create(new EventRegistration {
-            Student = student,
             StudentId = student.Id,
-            Event = e,
             EventId = e.Id,
             UserStatus = UserStatuses.PENDING,
             IsResumeSanitized = false,
         });
+        Save();
     }
 }
