@@ -21,16 +21,20 @@ public class EventsController : ControllerBase {
     private readonly IStudentRepository studentRepository;
     private readonly IMapper mapper;
     private readonly IValidator<Event> validator;
+    private readonly IUploadService uploadService;
 
     public EventsController(IEventRepository eventRepository, 
                             IEventRegistrationRepository registrationRepository, 
                             IMapper mapper, 
-                            IValidator<Event> validator, IStudentRepository studentRepository) {
+                            IValidator<Event> validator, 
+                            IStudentRepository studentRepository, 
+                            IUploadService uploadService) {
         this.eventRepository = eventRepository;
         this.registrationRepository = registrationRepository;
         this.mapper = mapper;
         this.validator = validator;
         this.studentRepository = studentRepository;
+        this.uploadService = uploadService;
     }
     
     [HttpGet(Name = nameof(GetEvents))]
@@ -43,8 +47,9 @@ public class EventsController : ControllerBase {
             endFilter = DateTime.MaxValue;
         }
 
-        return Ok(eventRepository.FindByCondition(e => e.Start >= startFilter.ToUniversalTime() 
-                                                       && e.End <= endFilter.ToUniversalTime()));
+        return Ok(eventRepository
+                      .GetAllEventsWithinRange(startFilter.ToUniversalTime(), 
+                                               endFilter.ToUniversalTime()));
     }
 
     [Authorize]
@@ -56,9 +61,12 @@ public class EventsController : ControllerBase {
         if (!validationResult.IsValid) return BadRequest(
                                                          validationResult.Errors.Select(error => error.ErrorMessage));
         
-        // TODO: Abstract into service transaction and async call
         eventRepository.Create(eventEntity);
-        // TODO: Upload image to AWS
+        // Upload image to AWS
+        if (e.Thumbnail != null)
+            uploadService.UploadFileToPath(e.Thumbnail, "");
+        if (e.Cover != null)
+            uploadService.UploadFileToPath(e.Cover, "");
         eventRepository.Save();
 
         var eventResponse = mapper.Map<EventPublicResponseDTO>(eventEntity);
@@ -68,8 +76,7 @@ public class EventsController : ControllerBase {
     [Authorize]
     [HttpPost("event/{eventId}/register", Name = nameof(RegisterForEvent))]
     public async Task<IActionResult> RegisterForEvent(string eventId) {
-        var _event = eventRepository.FindByCondition(e => e.Id == Guid.Parse(eventId))
-                                    .FirstOrDefault();
+        var _event = eventRepository.GetEventByUuid(Guid.Parse(eventId));
         if (_event == null) return NotFound();
 
         var studentId = HttpContext.User.FindFirstValue(ClaimTypes.Actor);

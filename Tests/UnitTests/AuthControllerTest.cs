@@ -1,5 +1,4 @@
 using AutoMapper;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using TescEvents.Controllers;
@@ -9,7 +8,7 @@ using TescEvents.Repositories;
 using TescEvents.Utilities.Profiles;
 using TescEvents.Validators;
 
-namespace Tests; 
+namespace Tests.UnitTests; 
 
 public class AuthControllerTest {
     private readonly Mock<IStudentRepository> mockStudentRepo;

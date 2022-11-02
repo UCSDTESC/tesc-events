@@ -10,4 +10,9 @@ public class EventRepository : RepositoryBase<Event>, IEventRepository {
     public Event? GetEventByUuid(Guid eventId) {
         return FindByCondition(e => e.Id == eventId).FirstOrDefault();
     }
+
+    public IEnumerable<Event> GetAllEventsWithinRange(DateTime start, DateTime end) {
+        return FindByCondition(e => e.Start >= start && e.Start <= end)
+            .OrderBy(e => e.Start);
+    }
 }
