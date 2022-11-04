@@ -15,7 +15,6 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<RepositoryContext>(options => 
                                                      options.UseNpgsql(AppSettings.ConnectionString));
 
-builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     
 builder.Configuration.AddEnvironmentVariables();

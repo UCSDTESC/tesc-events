@@ -7,22 +7,21 @@ namespace TescEvents.Controllers;
 [ApiController]
 [Route("/api/[controller]")]
 public class EventsController : ControllerBase {
-    private readonly IEventRepository eventRepository;
-
-    public EventsController(IEventRepository eventRepository) {
-        this.eventRepository = eventRepository;
+    public EventsController() {
     }
     
-    [HttpGet(Name = nameof(GetEvents))]
-    public IEnumerable<Event> GetEvents(string? start = "", string? end = "") {
-        if (!DateTime.TryParse(start, out var startFilter)) {
-            startFilter = DateTime.UnixEpoch;
-        }
+    [HttpGet(Name = nameof(GetEventDetails))]
+    public IActionResult GetEventDetails() {
+        throw new NotImplementedException();
+    }
 
-        if (!DateTime.TryParse(end, out var endFilter)) {
-            endFilter = DateTime.Now;
-        }
+    [HttpPost("/batch/{batchId:guid}/reserve")]
+    public IActionResult ReserveTimeslot(Guid batchId) {
+        throw new NotImplementedException();
+    }
 
-        return eventRepository.FindByCondition(e => e.Start >= startFilter && e.End <= endFilter);
+    [HttpPost("/batch/{batchId:guid}/cancel")]
+    public IActionResult CancelReservation(Guid batchId) {
+        throw new NotImplementedException();
     }
 }

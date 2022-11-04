@@ -11,5 +11,7 @@ public class RepositoryContext : DbContext {
         options.UseNpgsql(AppSettings.ConnectionString);
     }
     
-    public DbSet<Event>? Events { get; set; }
+    public DbSet<Batch>? Batches { get; set; }
+    public DbSet<EventCode>? EventCodes { get; set; }
+    public DbSet<User>? Users { get; set; }
 }
