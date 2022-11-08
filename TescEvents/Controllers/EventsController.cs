@@ -1,13 +1,15 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TescEvents.Models;
-using TescEvents.Repositories;
+using TescEvents.Services;
 
 namespace TescEvents.Controllers; 
 
 [ApiController]
 [Route("/api/[controller]")]
 public class EventsController : ControllerBase {
-    public EventsController() {
+    private readonly IRegistrationService registrationService;
+    public EventsController(IRegistrationService registrationService) {
+        this.registrationService = registrationService;
     }
     
     [HttpGet(Name = nameof(GetEventDetails))]
@@ -15,11 +17,13 @@ public class EventsController : ControllerBase {
         throw new NotImplementedException();
     }
 
+    [Authorize]
     [HttpPost("/batch/{batchId:guid}/reserve")]
     public IActionResult ReserveTimeslot(Guid batchId) {
         throw new NotImplementedException();
     }
 
+    [Authorize]
     [HttpPost("/batch/{batchId:guid}/cancel")]
     public IActionResult CancelReservation(Guid batchId) {
         throw new NotImplementedException();
