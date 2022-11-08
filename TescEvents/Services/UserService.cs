@@ -15,4 +15,12 @@ public class UserService : UnitOfWorkBase, IUserService {
     public User? GetUserByEmail(string email) {
         throw new NotImplementedException();
     }
+
+    public User? GetUser(Guid id) {
+        throw new NotImplementedException();
+    }
+
+    public void UpdateUser(User user) {
+        throw new NotImplementedException();
+    }
 }

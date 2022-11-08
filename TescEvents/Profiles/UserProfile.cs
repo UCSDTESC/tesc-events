@@ -9,5 +9,6 @@ public class UserProfile : Profile {
         CreateMap<UserCreateRequestDTO, User>()
             .ForMember(u => u.PasswordHash, o => o.Ignore())
             .ForMember(u => u.Salt, o => o.Ignore());
+        CreateMap<User, UserResponseDTO>();
     }
 }

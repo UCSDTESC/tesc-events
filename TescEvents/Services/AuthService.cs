@@ -6,13 +6,13 @@ using Microsoft.IdentityModel.Tokens;
 namespace TescEvents.Services; 
 
 public class AuthService : IAuthService {
-    public string CreateJwt(string pid, string email) {
+    public string CreateJwt(Guid userId, string email) {
         var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
         var audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
         var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY"));
         var tokenDescriptor = new SecurityTokenDescriptor {
             Subject = new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.Actor, pid),
+                new Claim(ClaimTypes.Actor, userId.ToString()),
                 new Claim(ClaimTypes.Email, email),
             }),
             Expires = DateTime.UtcNow.AddDays(14),

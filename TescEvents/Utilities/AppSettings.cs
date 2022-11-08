@@ -11,4 +11,6 @@ public static class AppSettings {
             return $"Host={host};Port={port};Database={database};Username={user};Password={pass}";
         }
     }
+
+    public static string ResumeBucket => Environment.GetEnvironmentVariable("RESUME_BUCKET");
 }

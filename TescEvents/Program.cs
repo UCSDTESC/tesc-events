@@ -16,7 +16,7 @@ DotEnv.Load(dotenv);
 
 builder.Services.AddAutoMapper(typeof(UserProfile));
 
-builder.Services.AddScoped<IRegistrationService, RegistrationService>();
+builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
