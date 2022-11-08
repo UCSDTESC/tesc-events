@@ -32,4 +32,8 @@ public class User {
     public Guid? BatchId { get; set; }
     
     public Batch? Batch { get; set; }
+    
+    public string? ResumeUrl { get; set; }
+    
+    public string? ResetToken { get; set; }
 }
