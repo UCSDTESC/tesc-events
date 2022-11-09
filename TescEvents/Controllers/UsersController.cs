@@ -122,19 +122,18 @@ public class UsersController : ControllerBase {
     }
 
     [HttpPost("/password")]
-    public IActionResult ResetPassword([FromBody] string email, [FromBody] string recoveryToken, [FromBody] string newPassword,
-                                       [FromBody] string confirmPassword) {
-        var user = userService.GetUserByEmail(email);
+    public IActionResult ResetPassword([FromBody] ResetPasswordRequestDTO req) {
+        var user = userService.GetUserByEmail(req.Email);
         if (user == null) return Unauthorized();
 
-        if (user.ResetToken != recoveryToken) return Unauthorized();
+        if (user.ResetToken != req.RecoveryToken) return Unauthorized();
 
         // TODO: Validate password
-        if (newPassword != confirmPassword) return BadRequest();
+        if (req.NewPassword != req.ConfirmPassword) return BadRequest();
 
         var salt = GenerateSalt();
         user.Salt = salt;
-        user.PasswordHash = HashPassword(newPassword, salt);
+        user.PasswordHash = HashPassword(req.NewPassword, salt);
         user.ResetToken = null;
         
         userService.UpdateUser(user);

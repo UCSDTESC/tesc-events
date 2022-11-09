@@ -9,7 +9,17 @@ public class EventService : UnitOfWorkBase, IEventService {
     public EventService(RepositoryContext context) : base(context) { }
     
     public void RegisterUserForBatch(User user, Batch batch) {
-        throw new NotImplementedException();
+        // Check if batch is at capacity
+        var usersInBatch = RepositoryContext.Users.Where(u => u.BatchId == batch.Id);
+        // Do nothing if batch is at capacity
+        if (usersInBatch.Count() == batch.Capacity) return;
+        
+        // Otherwise, assign user to batch
+        user.Batch = batch;
+        user.BatchId = batch.Id;
+
+        RepositoryContext.Users.Update(user);
+        RepositoryContext.SaveChanges();
     }
 
     public IQueryable<Batch> GetAvailableBatches() {

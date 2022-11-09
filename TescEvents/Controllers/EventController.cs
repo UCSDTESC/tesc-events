@@ -22,6 +22,7 @@ public class EventController : ControllerBase {
         return Ok(availableTimes);
     }
 
+    // POST decaf.live/api/event/gdfiaufewaewfuadsf234/reserve
     [Authorize]
     [HttpPost("/{batchId:guid}/reserve")]
     public IActionResult ReserveTimeslot(Guid batchId) {
