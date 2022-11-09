@@ -3,26 +3,27 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TescEvents.Services;
 
-namespace TescEvents.Controllers; 
+namespace TescEvents.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
 public class EventController : ControllerBase {
     private readonly IEventService eventService;
     private readonly IUserService userService;
+    private readonly IEmailService emailService;
 
-    public EventController(IEventService eventService, IUserService userService) {
+    public EventController(IEventService eventService, IUserService userService, IEmailService emailService) {
         this.eventService = eventService;
         this.userService = userService;
+        this.emailService = emailService;
     }
-    
+
     [HttpGet(Name = nameof(GetEventDetails))]
     public IActionResult GetEventDetails() {
         var availableTimes = eventService.GetAvailableBatches().ToList();
         return Ok(availableTimes);
     }
 
-    // POST decaf.live/api/event/gdfiaufewaewfuadsf234/reserve
     [Authorize]
     [HttpPost("/{batchId:guid}/reserve")]
     public IActionResult ReserveTimeslot(Guid batchId) {
@@ -34,8 +35,14 @@ public class EventController : ControllerBase {
 
         var batch = eventService.GetBatch(batchId);
         if (batch == null) return NotFound();
-        
+
+        var isReservationUpdate = user.Batch != null;
         eventService.RegisterUserForBatch(user, batch);
+        if (isReservationUpdate) {
+            emailService.SendReservationUpdateEmail(user.Email, batch);
+        } else {
+            emailService.SendReservationConfirmationEmail(user.Email, batch);
+        }
         return NoContent();
     }
 
@@ -50,8 +57,9 @@ public class EventController : ControllerBase {
 
         var batch = eventService.GetBatch(batchId);
         if (batch == null) return NotFound();
-        
+
         eventService.ClearUserReservation(user, batch);
+        emailService.SendReservationCancellationEmail(user.Email, batch);
         return Ok();
     }
 }
