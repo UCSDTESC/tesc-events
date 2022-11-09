@@ -17,7 +17,9 @@ DotEnv.Load(dotenv);
 builder.Services.AddAutoMapper(typeof(UserProfile));
 
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUploadService, UploadService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddControllers();
