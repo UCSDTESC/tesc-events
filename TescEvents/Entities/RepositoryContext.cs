@@ -8,8 +8,12 @@ public class RepositoryContext : DbContext {
     public RepositoryContext(DbContextOptions options) : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options) {
-        options.UseNpgsql(AppSettings.ConnectionString);
+        if (!options.IsConfigured) {
+            options.UseNpgsql(AppSettings.ConnectionString);
+        }
     }
-    
-    public DbSet<Event>? Events { get; set; }
+
+    public virtual DbSet<Event>? Events { get; set; }
+    public virtual DbSet<EventRegistration>? EventRegistrations { get; set; }
+    public virtual DbSet<Student>? Students { get; set; }
 }
