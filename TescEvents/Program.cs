@@ -1,11 +1,14 @@
 using System.Text;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using TescEvents.DTOs;
 using TescEvents.Entities;
 using TescEvents.Profiles;
 using TescEvents.Services;
 using TescEvents.Utilities;
+using TescEvents.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,8 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUploadService, UploadService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IValidator<UserCreateRequestDTO>, UserCreateRequestValidator>();
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<RepositoryContext>(options => 

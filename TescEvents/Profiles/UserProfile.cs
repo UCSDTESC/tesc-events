@@ -6,9 +6,10 @@ namespace TescEvents.Profiles;
 
 public class UserProfile : Profile {
     public UserProfile() {
-        CreateMap<UserCreateRequestDTO, User>()
-            .ForMember(u => u.PasswordHash, o => o.Ignore())
-            .ForMember(u => u.Salt, o => o.Ignore());
+        CreateMap<UserCreateRequestDTO, User>();
         CreateMap<User, UserResponseDTO>();
+
+        CreateMap<UserPatches, User>();
+        CreateMap<User, UserPatches>();
     }
 }

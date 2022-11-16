@@ -7,10 +7,8 @@ public class UserCreateRequestDTO {
     public string Password { get; set; }
     public string First { get; set; }
     public string Last { get; set; } 
-    [EmailAddress]
     public string Email { get; set; } 
-    [Phone]
     public string? Phone { get; set; }
     public IFormFile? Resume { get; set; }
-    public string BatchId { get; set; }
+    public string? BatchId { get; set; }
 }

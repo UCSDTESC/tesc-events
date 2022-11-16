@@ -26,7 +26,7 @@ public class User {
     public string Salt { get; set; }
     
     [MaxLength(255)]
-    public string Phone { get; set; }
+    public string? Phone { get; set; }
     
     [ForeignKey(nameof(Batch))]
     public Guid? BatchId { get; set; }
