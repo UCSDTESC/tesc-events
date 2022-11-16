@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using TescEvents.DTOs;
@@ -10,6 +13,7 @@ using TescEvents.Models;
 using TescEvents.Repositories;
 using TescEvents.Services;
 using TescEvents.Utilities;
+using TescEvents.Validators;
 using static BCrypt.Net.BCrypt;
 
 namespace TescEvents.Controllers; 
@@ -23,21 +27,55 @@ public class UsersController : ControllerBase {
     private readonly IUserService userService;
     private readonly IUploadService uploadService;
     private readonly IEmailService emailService;
+    private readonly IValidator<UserCreateRequestDTO> userValidator;
 
     public UsersController(IMapper mapper, IAuthService authService, IUserService userService, IUploadService 
-                               uploadService, IEmailService emailService) {
+                               uploadService, IEmailService emailService, IValidator<UserCreateRequestDTO> userValidator) {
         this.mapper = mapper;
         this.authService = authService;
         this.userService = userService;
         this.uploadService = uploadService;
         this.emailService = emailService;
+        this.userValidator = userValidator;
     }
 
     [Authorize]
-    [HttpPost("/{userId}")]
-    public IActionResult GetUserInfo(string userId) {
+    [HttpPatch("{userid:guid}")]
+    public IActionResult UpdateUserInfo(Guid userId, [FromBody, Required] JsonPatchDocument<UserPatches> patchDoc) {
         var id = HttpContext.User.FindFirstValue(ClaimTypes.Actor);
-        if (id == null || userId != id) return Unauthorized();
+        if (id == null || userId.ToString() != id) return Unauthorized();
+
+        var student = userService.GetUser(userId);
+        if (student == null) return NotFound();
+
+        var studentToUpdate = mapper.Map<UserPatches>(student);
+        try {
+            patchDoc.ApplyTo(studentToUpdate);
+        } catch {
+            return BadRequest();
+        }
+        if (studentToUpdate.First == null || studentToUpdate.Last == null) return BadRequest();
+        
+        mapper.Map(studentToUpdate, student);
+
+        // TODO: avoid using try/catch
+        try {
+            userService.UpdateUser(student);
+            userService.Commit();
+        } catch {
+            return BadRequest();
+        }
+
+        var userRes = mapper.Map<UserResponseDTO>(student);
+
+        return Ok(userRes);
+    }
+
+    [Authorize]
+    [HttpGet("{userId:guid}")]
+    public IActionResult GetUserInfo(Guid userId) {
+        var id = HttpContext.User.FindFirstValue(ClaimTypes.Actor);
+        if (id == null || userId.ToString() != id) return Unauthorized();
 
         var student = userService.GetUser(Guid.Parse(id));
         if (student == null) return NotFound();
@@ -46,9 +84,35 @@ public class UsersController : ControllerBase {
         return Ok(userRes);
     }
 
-    [HttpPost("/register")]
-    public IActionResult Register(UserCreateRequestDTO userReq) {
-        if (!ModelState.IsValid) return BadRequest();
+    [HttpPost("register")]
+    public IActionResult Register([FromForm] UserCreateRequestDTO userReq) {
+        var validationResult = userValidator.Validate(userReq);
+        if (!validationResult.IsValid) {
+            return BadRequest(new {
+                type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                title = "One or more validation errors occurred.",
+                status = 400,
+                errors = validationResult.Errors
+                                         .GroupBy(e => e.PropertyName)
+                                         .ToDictionary(
+                                                       x => x.Key, 
+                                                       x => x
+                                                            .ToList()
+                                                            .Select(m => m.ErrorMessage))
+            });
+        }
+
+        var emailValidationFailure = new ValidationResult("Email address already in use");
+        if (userService.GetUserByEmail(userReq.Email) != null)
+            return BadRequest(new {
+                type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                title = "One or more validation errors occurred.",
+                status = 400,
+                errors = new Dictionary<string, string[]> {
+                    { "Email", new []{ emailValidationFailure.ErrorMessage } }
+                }
+            }); 
+        
         var user = mapper.Map<User>(userReq);
         var salt = GenerateSalt();
 
@@ -61,7 +125,7 @@ public class UsersController : ControllerBase {
         return NoContent();
     }
 
-    [HttpPost("/login")]
+    [HttpPost("login")]
     public IActionResult Login([FromForm] string email, [FromForm] string password) {
         var user = userService.GetUserByEmail(email);
         if (user == null) return Unauthorized();
@@ -98,7 +162,7 @@ public class UsersController : ControllerBase {
         return Ok();
     }
 
-    [HttpPost("/recovery")]
+    [HttpPost("recovery")]
     public IActionResult RequestPasswordReset([FromBody] string email) {
         var user = userService.GetUserByEmail(email);
         if (user == null) return Unauthorized();
@@ -121,7 +185,7 @@ public class UsersController : ControllerBase {
         return Accepted();
     }
 
-    [HttpPost("/password")]
+    [HttpPost("password")]
     public IActionResult ResetPassword([FromBody] ResetPasswordRequestDTO req) {
         var user = userService.GetUserByEmail(req.Email);
         if (user == null) return Unauthorized();

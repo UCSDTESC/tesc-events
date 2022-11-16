@@ -9,18 +9,18 @@ public class UserService : UnitOfWorkBase, IUserService {
     }
 
     public void CreateUser(User user) {
-        throw new NotImplementedException();
+        RepositoryContext.Users.Add(user);
     }
 
     public User? GetUserByEmail(string email) {
-        throw new NotImplementedException();
+        return RepositoryContext.Users.FirstOrDefault(u => u.Email == email);
     }
 
     public User? GetUser(Guid id) {
-        throw new NotImplementedException();
+        return RepositoryContext.Users.Find(id);
     }
 
     public void UpdateUser(User user) {
-        throw new NotImplementedException();
+        RepositoryContext.Users.Update(user);
     }
 }
