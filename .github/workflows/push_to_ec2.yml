@@ -1,0 +1,30 @@
+on: push
+
+jobs:
+  deploy:
+    name: Push to EC2 Instance
+    runs-on: ubuntu-latest
+      
+    steps:
+      - name: Setup .NET
+        uses: actions/checkout@v3
+        with:
+          dotnet-verson: 6.0.x
+          
+      - name: Restore dependencies
+        run: dotnet restore
+        
+      - name: Build
+        run: dotnet build --no-restore
+        
+      - name: Publish
+        run: dotnet publish -c Production -o out
+        
+      - name: Deploy to EC2 instance
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: "${{ secrets.EC2_SSH_KEY }}"
+          SOURCE: "./out/"
+          REMOTE_HOST: "{{ secrets.HOST_DNS }}"
+          REMOTE_USER: "{{ secrets.USER }}"
+          TARGET: "{{ secrets.TARGET_DIR }}"
