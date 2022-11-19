@@ -3,11 +3,11 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
 # Install dependencies
-RUN sudo apt install unzip
+RUN apt install unzip
 
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
 unzip awscliv2.zip && \
-sudo ./aws/install
+./aws/install
     
 # Copy csproj and restore as distinct layers
 COPY *.csproj ./
