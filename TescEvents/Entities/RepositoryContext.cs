@@ -9,8 +9,6 @@ public class RepositoryContext : DbContext {
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options) {
-        if (!options.IsConfigured)
-            options.UseNpgsql(AppSettings.ConnectionString);
     }
     
     public DbSet<Batch>? Batches { get; set; }

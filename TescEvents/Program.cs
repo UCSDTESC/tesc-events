@@ -11,12 +11,19 @@ using TescEvents.Services;
 using TescEvents.Utilities;
 using TescEvents.Validators;
 
+var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+var isDevelopment = env == Environments.Development;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var root = Directory.GetCurrentDirectory();
-var dotenv = Path.Combine(root, ".env");
-DotEnv.Load(dotenv);
+try {
+    var root = Directory.GetCurrentDirectory();
+    var dotenv = Path.Combine(root, ".env");
+    DotEnv.Load(dotenv);
+} catch {
+    // ignored
+}
 
 builder.Services.AddAutoMapper(typeof(UserProfile));
 
@@ -54,17 +61,20 @@ builder.Services.AddAuthentication(options => {
     };
 });
 
+
 var app = builder.Build();
-if (app.Environment.IsDevelopment()) SeedDb();
+//if (isDevelopment) SeedDb();
+using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope()) {
+    var context = serviceScope.ServiceProvider.GetRequiredService<RepositoryContext>();
+    context.Database.Migrate();
+}
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 app.UseAuthentication();
 
 app.MapControllers();
-
 app.Run();
-
 
 void SeedDb() {
     using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
