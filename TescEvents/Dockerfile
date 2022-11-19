@@ -2,13 +2,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
-# Install dependencies
-RUN apt-get update apt-get install zip -y
-
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
-unzip awscliv2.zip && \
-./aws/install
-    
 # Copy csproj and restore as distinct layers
 COPY *.csproj ./
 RUN dotnet restore
@@ -22,7 +15,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build-env /app/out .
 
-COPY /startup/startup.sh /startup/startup.sh
-RUN chmod 777 /startup/startup.sh
-
-ENTRYPOINT ["/startup/startup.sh"]
+ENTRYPOINT ["dotnet", "TescEvents.dll"]
