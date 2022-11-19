@@ -96,7 +96,7 @@ public class UserTest : IDisposable {
             .Setup(m => m.CreateUser(It.IsAny<User>()));
         userService
             .Setup(m => m.GetUserByEmail(It.IsAny<string>()))
-            .Returns((User?)null);
+            .Returns(null as User);
 
         // Act
         var result = usersController.Register(userDto);

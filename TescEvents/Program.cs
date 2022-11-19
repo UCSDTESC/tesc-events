@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TescEvents.DTOs;
 using TescEvents.Entities;
+using TescEvents.Models;
 using TescEvents.Profiles;
 using TescEvents.Services;
 using TescEvents.Utilities;
@@ -27,7 +28,6 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IValidator<UserCreateRequestDTO>, UserCreateRequestValidator>();
 builder.Services.AddControllers().AddNewtonsoftJson();
 
-builder.Services.AddControllers();
 builder.Services.AddDbContext<RepositoryContext>(options => 
                                                      options.UseNpgsql(AppSettings.ConnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -55,7 +55,7 @@ builder.Services.AddAuthentication(options => {
 });
 
 var app = builder.Build();
-
+if (app.Environment.IsDevelopment()) SeedDb();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -64,3 +64,20 @@ app.UseAuthentication();
 app.MapControllers();
 
 app.Run();
+
+
+void SeedDb() {
+    using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+    var context = serviceScope.ServiceProvider.GetRequiredService<RepositoryContext>();
+    context.Database.EnsureDeleted();
+    context.Database.EnsureCreated();
+    
+    context.Batches.AddRange(new Batch() {
+        Capacity = 100,
+        Length = new TimeSpan(0, 2, 0, 0),
+        Timeslot = new DateTime(2022, 11, 15).ToUniversalTime(),
+        WaitlistCapacity = 30
+    });
+
+    context.SaveChanges();
+}

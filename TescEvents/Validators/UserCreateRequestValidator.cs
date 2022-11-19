@@ -8,6 +8,7 @@ public class UserCreateRequestValidator : AbstractValidator<UserCreateRequestDTO
         RuleLevelCascadeMode = CascadeMode.Stop;
         
         RuleFor(u => u.Email)
+            .NotEmpty()
             .EmailAddress();
         RuleFor(u => u.Password)
             .NotEmpty()
