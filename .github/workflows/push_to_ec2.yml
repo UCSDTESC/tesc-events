@@ -6,25 +6,33 @@ jobs:
     runs-on: ubuntu-latest
       
     steps:
-      - name: Setup .NET
-        uses: actions/checkout@v3
-        with:
-          dotnet-verson: 6.0.x
+      - uses: actions/checkout@v3
+      
+      - name: Log In to Docker
+        env:
+          DOCKER_USER: "${{ secrets.DOCKER_USER }}"
+          DOCKER_PASSWORD: "${{ secrets.DOCKER_PASSWORD }}"
+        run:
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           
-      - name: Restore dependencies
-        run: dotnet restore
-        
-      - name: Build
-        run: dotnet build --no-restore
-        
-      - name: Publish
-        run: dotnet publish -c Production -o out
+      - name: Build and Push to Docker
+        env:
+          REPO: tescevents
+        run: |
+          docker build -t $REPO TescEvents
+          docker tag $REPO:latest ${{ secrets.DOCKER_USER }}/$REPO:latest
+          docker push ${{ secrets.DOCKER_USER }}/$REPO
         
       - name: Deploy to EC2 instance
-        uses: easingthemes/ssh-deploy@v2.1.5
-        env:
-          SSH_PRIVATE_KEY: "${{ secrets.EC2_SSH_KEY }}"
-          SOURCE: "./out/"
-          REMOTE_HOST: "{{ secrets.HOST_DNS }}"
-          REMOTE_USER: "{{ secrets.USER }}"
-          TARGET: "{{ secrets.TARGET_DIR }}"
+        uses: appleboy/ssh-action@master
+        with:
+          host: "${{ secrets.HOST_DNS }}"
+          username: "${{ secrets.USER }}"
+          key: "${{ secrets.EC2_SSH_KEY }}"
+          envs: GITHUB_SHA
+          script: |
+            docker login
+            docker pull "${{ secrets.DOCKER_USER }}/$REPO"
+            docker stop tescevents
+            docker rm tescevents
+            docker run "${{ secrets.DOCKER_USER }}/$REPO"
