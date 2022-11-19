@@ -6,8 +6,10 @@ jobs:
     runs-on: ubuntu-latest
       
     steps:
+      - uses: actions/checkout@v3
+      
       - name: Setup .NET
-        uses: actions/checkout@v3
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-verson: 6.0.x
           
@@ -18,7 +20,7 @@ jobs:
         run: dotnet build --no-restore
         
       - name: Publish
-        run: dotnet publish -c Production -o out
+        run: dotnet publish -c "Production" -o out
         
       - name: Deploy to EC2 instance
         uses: easingthemes/ssh-deploy@v2.1.5
