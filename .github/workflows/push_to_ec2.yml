@@ -41,12 +41,12 @@ jobs:
              docker stop $id && docker rm $id
             done
             docker run --name tescevents \
-            -e DB_HOST=${{ secrets.DB_HOST }} \
-            -e DB_PORT=${{ secrets.DB_PORT }} \
-            -e DB_DATABASE=${{ secrets.DB_DATABASE }} \
-            -e DB_USER=${{ secrets.DB_USER }} \
-            -e DB_PASS=${{ secrets.DB_PASS }} \
-            -e JWT_KEY=${{ secrets.JWT_KEY }} \
-            -e JWT_ISSUER=${{ secrets.JWT_ISSUER }} \
-            -e JWT_AUDIENCE=${{ secrets.JWT_AUDIENCE }} \
+            -e DB_HOST="${{ secrets.DB_HOST }}" \
+            -e DB_PORT="${{ secrets.DB_PORT }}" \
+            -e DB_DATABASE="${{ secrets.DB_DATABASE }}" \
+            -e DB_USER="${{ secrets.DB_USER }}" \
+            -e DB_PASS="${{ secrets.DB_PASS }}" \
+            -e JWT_KEY="${{ secrets.JWT_KEY }}" \
+            -e JWT_ISSUER="${{ secrets.JWT_ISSUER }}" \
+            -e JWT_AUDIENCE="${{ secrets.JWT_AUDIENCE }}" \
             "${{ secrets.DOCKER_USER }}"/$REPO
