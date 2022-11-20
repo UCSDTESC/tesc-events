@@ -23,7 +23,7 @@ jobs:
           docker tag $REPO:latest ${{ secrets.DOCKER_USER }}/$REPO:latest
           docker push ${{ secrets.DOCKER_USER }}/$REPO
         
-      - name: Deploy to EC2 instance
+      - name: Deploy to EC2 instance with ssh-action
         uses: appleboy/ssh-action@master
         with:
           host: "${{ secrets.HOST_DNS }}"
@@ -40,4 +40,12 @@ jobs:
              echo "$id"
              docker stop $id && docker rm $id
             done
-            docker run "${{ secrets.DOCKER_USER }}"/$REPO --name tescevents
+            docker run "${{ secrets.DOCKER_USER }}"/$REPO --name tescevents \
+            -e DB_HOST=${{ secrets.DB_HOST }} \
+            -e DB_PORT=${{ secrets.DB_PORT }} \
+            -e DB_DATABASE=${{ secrets.DB_DATABASE }} \
+            -e DB_USER=${{ secrets.DB_USER }} \
+            -e DB_PASS=${{ secrets.DB_PASS }} \
+            -e JWT_KEY=${{ secrets.JWT_KEY }} \
+            -e JWT_ISSUER=${{ secrets.JWT_ISSUER }} \
+            -e JWT_AUDIENCE=${{ secrets.JWT_AUDIENCE }}
