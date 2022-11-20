@@ -42,7 +42,7 @@ jobs:
             done
             docker system prune -f
             docker run --name tescevents \
-            -p 443:80 \
+            -p 443:7208 -p 80:5112 \
             -e DB_HOST="${{ secrets.DB_HOST }}" \
             -e DB_PORT="${{ secrets.DB_PORT }}" \
             -e DB_DATABASE="${{ secrets.DB_DATABASE }}" \
