@@ -33,11 +33,11 @@ jobs:
           envs: GITHUB_SHA
           script: |
             docker login -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"
-            docker pull "${{ secrets.DOCKER_USER }}/$REPO"
+            docker pull "${{ secrets.DOCKER_USER }}"/$REPO
             ids=$(docker ps -a -q)
             for id in $ids
             do
              echo "$id"
              docker stop $id && docker rm $id
             done
-            docker run "${{ secrets.DOCKER_USER }}/$REPO" --name tescevents
+            docker run "${{ secrets.DOCKER_USER }}"/$REPO --name tescevents
