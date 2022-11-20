@@ -31,7 +31,7 @@ jobs:
           key: "${{ secrets.EC2_SSH_KEY }}"
           envs: GITHUB_SHA
           script: |
-            docker login
+            docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
             docker pull "${{ secrets.DOCKER_USER }}/$REPO"
             docker stop tescevents
             docker rm tescevents
