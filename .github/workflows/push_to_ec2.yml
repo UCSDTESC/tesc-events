@@ -41,8 +41,8 @@ jobs:
              docker stop $id && docker rm $id
             done
             docker system prune -f
-            docker run --name tescevents 
-            -p 443:80
+            docker run --name tescevents \
+            -p 443:80 \
             -e DB_HOST="${{ secrets.DB_HOST }}" \
             -e DB_PORT="${{ secrets.DB_PORT }}" \
             -e DB_DATABASE="${{ secrets.DB_DATABASE }}" \
