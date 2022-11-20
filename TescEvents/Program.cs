@@ -26,6 +26,7 @@ try {
 }
 
 builder.Services.AddAutoMapper(typeof(UserProfile));
+builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
