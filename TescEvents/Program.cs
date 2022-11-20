@@ -26,7 +26,7 @@ try {
 }
 
 builder.Services.AddAutoMapper(typeof(UserProfile));
-builder.Configuration.AddEnvironmentVariables();
+builder.Configuration.AddEnvironmentVariables().Build();
 
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -39,7 +39,6 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddDbContext<RepositoryContext>(options => 
                                                      options.UseNpgsql(AppSettings.ConnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
