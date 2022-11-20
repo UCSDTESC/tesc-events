@@ -25,11 +25,12 @@ jobs:
         
       - name: Deploy to EC2 instance
         uses: appleboy/ssh-action@master
+        env:
+            REPO: tescevents
         with:
           host: "${{ secrets.HOST_DNS }}"
           username: "${{ secrets.USER }}"
           key: "${{ secrets.EC2_PRIVATE_KEY }}"
-          
           envs: GITHUB_SHA
           script: |
             docker login -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"
