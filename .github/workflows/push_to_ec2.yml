@@ -40,6 +40,7 @@ jobs:
              echo "$id"
              docker stop $id && docker rm $id
             done
+            docker system prune -f
             docker run --name tescevents 
             -p 443:80
             -e DB_HOST="${{ secrets.DB_HOST }}" \
@@ -50,4 +51,4 @@ jobs:
             -e JWT_KEY="${{ secrets.JWT_KEY }}" \
             -e JWT_ISSUER="${{ secrets.JWT_ISSUER }}" \
             -e JWT_AUDIENCE="${{ secrets.JWT_AUDIENCE }}" \
-            "${{ secrets.DOCKER_USER }}"/$REPO &
+            "${{ secrets.DOCKER_USER }}"/$REPO
