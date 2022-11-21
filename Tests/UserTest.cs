@@ -42,8 +42,6 @@ public class UserTest : IDisposable {
             c.AddProfile<UserProfile>();
         }).CreateMapper();
         
-        
-        
         usersController = new UsersController(mapper, authService, userService.Object, uploadService, emailService, userValidator);
     }
     

@@ -63,13 +63,11 @@ builder.Services.AddAuthentication(options => {
 
 
 var app = builder.Build();
-//if (isDevelopment) SeedDb();
+if (isDevelopment) SeedDb();
 using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope()) {
     var context = serviceScope.ServiceProvider.GetRequiredService<RepositoryContext>();
     context.Database.Migrate();
 }
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
 app.UseAuthentication();
 
