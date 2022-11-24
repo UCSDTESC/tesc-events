@@ -1,4 +1,7 @@
-on: push
+on:
+  push:
+    branches:
+      - staging
 
 jobs:
   deploy:
@@ -40,7 +43,7 @@ jobs:
              echo "$id"
              docker stop $id && docker rm $id
             done
-            docker run --name tescevents \
+            docker run -d --name tescevents \
             -p 80:80 \
             -e DB_HOST="${{ secrets.DB_HOST }}" \
             -e DB_PORT="${{ secrets.DB_PORT }}" \
@@ -50,6 +53,5 @@ jobs:
             -e JWT_KEY="${{ secrets.JWT_KEY }}" \
             -e JWT_ISSUER="${{ secrets.JWT_ISSUER }}" \
             -e JWT_AUDIENCE="${{ secrets.JWT_AUDIENCE }}" \
-            "${{ secrets.DOCKER_USER }}"/$REPO &
+            "${{ secrets.DOCKER_USER }}"/$REPO
             docker system prune -f
-
