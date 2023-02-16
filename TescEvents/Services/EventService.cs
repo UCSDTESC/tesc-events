@@ -10,6 +10,7 @@ public class EventService : IEventService {
 
     public IQueryable<Event> GetFutureEvents() {
         throw new NotImplementedException();
+        
     }
 
     public Event? GetEventDetails(Guid eventId) {
