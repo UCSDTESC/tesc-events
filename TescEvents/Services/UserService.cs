@@ -5,22 +5,26 @@ using TescEvents.Repositories;
 namespace TescEvents.Services; 
 
 public class UserService : IUserService {
-    public UserService(RepositoryContext context) : base(context) {
+    private RepositoryContext context;
+    public UserService(RepositoryContext context) {
+        this.context = context;
     }
 
     public void CreateStudent(Student user) {
-        RepositoryContext.Students.Add(user);
+        context.Students.Add(user);
+        context.SaveChanges();
     }
 
     public Student? GetStudentByEmail(string email) {
-        return RepositoryContext.Students.FirstOrDefault(u => u.Email == email);
+        return context.Students.FirstOrDefault(u => u.Email == email);
     }
 
     public Student? GetStudent(Guid id) {
-        return RepositoryContext.Students.Find(id);
+        return context.Students.Find(id);
     }
 
     public void UpdateStudent(Student user) {
-        RepositoryContext.Students.Update(user);
+        context.Students.Update(user);
+        context.SaveChanges();
     }
 }

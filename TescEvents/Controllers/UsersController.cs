@@ -21,13 +21,13 @@ public class UsersController : ControllerBase {
     private readonly IAuthService authService;
     private readonly IUserService userService;
     private readonly IEmailService emailService;
-    private readonly IValidator<UserCreateRequestDTO> userValidator;
+    private readonly IValidator<StudentCreateRequestDTO> userValidator;
 
     public UsersController(IMapper mapper, 
                            IAuthService authService, 
                            IUserService userService, 
                            IEmailService emailService, 
-                           IValidator<UserCreateRequestDTO> userValidator) {
+                           IValidator<StudentCreateRequestDTO> userValidator) {
         this.mapper = mapper;
         this.authService = authService;
         this.userService = userService;
@@ -37,20 +37,20 @@ public class UsersController : ControllerBase {
 
     [Authorize]
     [HttpPatch("{userid:guid}")]
-    public IActionResult UpdateUserInfo(Guid userId, [FromBody, Required] JsonPatchDocument<UserPatches> patchDoc) {
+    public IActionResult UpdateUserInfo(Guid userId, [FromBody, Required] JsonPatchDocument<StudentPatches> patchDoc) {
         var id = HttpContext.User.FindFirstValue(ClaimTypes.Actor);
         if (id == null || userId.ToString() != id) return Unauthorized();
 
         var student = userService.GetStudent(userId);
         if (student == null) return NotFound();
 
-        var studentToUpdate = mapper.Map<UserPatches>(student);
+        var studentToUpdate = mapper.Map<StudentPatches>(student);
         try {
             patchDoc.ApplyTo(studentToUpdate);
         } catch {
             return BadRequest();
         }
-        if (studentToUpdate.First == null || studentToUpdate.Last == null) return BadRequest();
+        if (studentToUpdate.FirstName == null || studentToUpdate.LastName == null) return BadRequest();
         
         mapper.Map(studentToUpdate, student);
 
@@ -61,7 +61,7 @@ public class UsersController : ControllerBase {
             return BadRequest();
         }
 
-        var userRes = mapper.Map<UserResponseDTO>(student);
+        var userRes = mapper.Map<StudentResponseDTO>(student);
 
         return Ok(userRes);
     }
@@ -75,44 +75,22 @@ public class UsersController : ControllerBase {
         var student = userService.GetStudent(Guid.Parse(id));
         if (student == null) return NotFound();
 
-        var userRes = mapper.Map<UserResponseDTO>(student);
+        var userRes = mapper.Map<StudentResponseDTO>(student);
         return Ok(userRes);
     }
 
     [HttpPost("register")]
-    public IActionResult Register([FromForm] UserCreateRequestDTO userReq) {
-        var validationResult = userValidator.Validate(userReq);
+    public IActionResult Register([FromForm] StudentCreateRequestDTO studentReq) {
+        var validationResult = userValidator.Validate(studentReq);
         if (!validationResult.IsValid) {
-            return BadRequest(new {
-                type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                title = "One or more validation errors occurred.",
-                status = 400,
-                errors = validationResult.Errors
-                                         .GroupBy(e => e.PropertyName)
-                                         .ToDictionary(
-                                                       x => x.Key, 
-                                                       x => x
-                                                            .ToList()
-                                                            .Select(m => m.ErrorMessage))
-            });
+            return BadRequest(validationResult.ToDictionary());
         }
 
-        var emailValidationFailure = new ValidationResult("Email address already in use");
-        if (userService.GetStudentByEmail(userReq.Email) != null)
-            return BadRequest(new {
-                type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                title = "One or more validation errors occurred.",
-                status = 400,
-                errors = new Dictionary<string, string[]> {
-                    { "Email", new []{ emailValidationFailure.ErrorMessage } }
-                }
-            }); 
-        
-        var user = mapper.Map<Student>(userReq);
+        var user = mapper.Map<Student>(studentReq);
         var salt = GenerateSalt();
 
         user.Salt = salt;
-        user.PasswordHash = HashPassword(userReq.Password, salt);
+        user.PasswordHash = HashPassword(studentReq.Password, salt);
         
         userService.CreateStudent(user);
 
@@ -127,7 +105,7 @@ public class UsersController : ControllerBase {
         if (HashPassword(password, user.Salt) != user.PasswordHash) return Unauthorized();
 
         var jwt = authService.CreateJwt(user.Id, user.Email);
-        return Ok(jwt);
+        return Ok(new UserLoginResponseDTO(user.Id, jwt));
     }
 
     [HttpPost("recovery")]
