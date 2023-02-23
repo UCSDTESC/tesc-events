@@ -8,7 +8,7 @@ public interface IEventService {
     /// Gets all future events
     /// </summary>
     /// <returns>A collection of future events</returns>
-    IQueryable<Event> GetFutureEvents();
+    IEnumerable<Event>? GetFutureEvents();
 
     /// <summary>
     /// Finds an event with the given event ID

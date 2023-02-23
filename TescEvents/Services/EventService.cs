@@ -6,19 +6,21 @@ using TescEvents.Repositories;
 namespace TescEvents.Services;
 
 public class EventService : IEventService {
-    public EventService(RepositoryContext context) : base() { }
 
-    public IQueryable<Event> GetFutureEvents() {
+    private RepositoryContext context;
+    public EventService(RepositoryContext context) {
+        this.context = context;
+    }
+
+    public IEnumerable<Event> GetFutureEvents() {
         //throw new NotImplementedException();
         DateTime timeNow = DateTime.Now;
-        var futureEvents = RepositoryContext.Events.Where(u => u.Start >= timeNow);
+        var futureEvents = context.Events!.Where(u => u.Start >= timeNow);
         return futureEvents;
     }
 
     public Event? GetEventDetails(Guid eventId) {
-        //throw new NotImplementedException();
-        var event = RepositoryContext.Events!.FirstOrDefault(e => e.Id == eventId);
-        return event;
+        var currEvent = context.Events!.FirstOrDefault(e => e.Id == eventId);
+        return currEvent;
     }
-    
 }
