@@ -1,0 +1,33 @@
+﻿<Properties StartupConfiguration="{917D37FE-1B8D-4638-AC0F-EA43F59A22F7}|Default">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TescEvents/Services/EventService.cs">
+    <Files>
+      <File FileName="TescEvents/Controllers/EventController.cs" Line="24" Column="35" />
+      <File FileName="TescEvents/Services/EventService.cs" Line="41" Column="2" />
+      <File FileName="TescEvents/Services/EmailService.cs" Line="1" Column="1" />
+      <File FileName="TescEvents/Controllers/UsersController.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="TescEvents" expanded="True">
+            <Node name="TescEvents" expanded="True">
+              <Node name="Controllers" expanded="True" />
+              <Node name="Models" expanded="True" />
+              <Node name="Profiles" expanded="True" />
+              <Node name="Properties" expanded="True" />
+              <Node name="Repositories" expanded="True" />
+              <Node name="Services" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.TescEvents PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

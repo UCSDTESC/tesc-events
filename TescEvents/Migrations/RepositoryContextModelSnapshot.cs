@@ -28,8 +28,14 @@ namespace TescEvents.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("AcceptingApplications")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("Archived")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime>("CloseDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Cover")
                         .HasColumnType("text");
@@ -40,6 +46,15 @@ namespace TescEvents.Migrations
 
                     b.Property<DateTime>("End")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("OpenDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("RequiresApplication")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("RequiresResume")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("Start")
                         .HasColumnType("timestamp with time zone");

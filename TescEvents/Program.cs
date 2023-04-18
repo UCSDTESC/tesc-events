@@ -21,10 +21,12 @@ DotEnv.Load(dotenv);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<RepositoryContext>(options => 
                                                      options.UseNpgsql(AppSettings.ConnectionString));
+
 builder.Services.AddAutoMapper(typeof(UserProfile));
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IValidator<StudentCreateRequestDTO>, UserCreateRequestValidator>();
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
