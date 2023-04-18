@@ -14,8 +14,8 @@ public class EventService : IEventService {
 
     public IEnumerable<Event> GetFutureEvents() {
         //throw new NotImplementedException();
-        DateTime timeNow = DateTime.Now;
-        var futureEvents = context.Events!.Where(u => u.Start >= timeNow);
+        DateTime timeNow = DateTime.UtcNow;
+        var futureEvents = context.Events!.Where(u => u.Start.ToUniversalTime() >= timeNow);
         return futureEvents;
     }
 

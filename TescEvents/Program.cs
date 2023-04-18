@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TescEvents.Entities;
 using TescEvents.Repositories;
 using TescEvents.Utilities;
+using TescEvents.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +16,8 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<RepositoryContext>(options => 
                                                      options.UseNpgsql(AppSettings.ConnectionString));
 
-builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddScoped<IEventService, EventService>();
     
 builder.Configuration.AddEnvironmentVariables();
 

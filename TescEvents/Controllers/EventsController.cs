@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using TescEvents.Models;
-using TescEvents.Repositories;
+using TescEvents.Services;
 
 namespace TescEvents.Controllers; 
 
 [ApiController]
 [Route("/api/[controller]")]
 public class EventsController : ControllerBase {
-    private readonly IEventRepository eventRepository;
+    private readonly IEventService eventService;
 
-    public EventsController(IEventRepository eventRepository) {
-        this.eventRepository = eventRepository;
+    public EventsController(IEventService eventService) {
+        this.eventService = eventService;
     }
     
     [HttpGet(Name = nameof(GetEvents))]
@@ -23,6 +23,6 @@ public class EventsController : ControllerBase {
             endFilter = DateTime.Now;
         }
 
-        return eventRepository.FindByCondition(e => e.Start >= startFilter && e.End <= endFilter);
+        return eventService.GetFutureEvents();
     }
 }
