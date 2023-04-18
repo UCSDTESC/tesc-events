@@ -14,13 +14,14 @@ using TescEvents.Validators;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var root = Directory.GetCurrentDirectory();
-var dotenv = Path.Combine(root, ".env");
-DotEnv.Load(dotenv);
-
 builder.Services.AddControllers();
+
+// DB Context
+var dbOptions = builder.Configuration.GetSection(DbOptions.Db).Get<DbOptions>();
+var connectionString = DbOptions.ConnectionString(dbOptions.Host, dbOptions.Port, dbOptions.Database, dbOptions.User, 
+                                                  dbOptions.Password);
 builder.Services.AddDbContext<RepositoryContext>(options => 
-                                                     options.UseNpgsql(AppSettings.ConnectionString));
+                                                     options.UseNpgsql(connectionString));
 
 builder.Services.AddAutoMapper(typeof(UserProfile));
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -30,6 +31,9 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IValidator<StudentCreateRequestDTO>, UserCreateRequestValidator>();
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.Jwt));
+builder.Services.Configure<DbOptions>(builder.Configuration.GetSection(DbOptions.Db));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddAuthentication(options => {
@@ -37,14 +41,12 @@ builder.Services.AddAuthentication(options => {
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options => {
+    var jwtOptions = builder.Configuration.GetSection(JwtOptions.Jwt).Get<JwtOptions>();
     options.TokenValidationParameters = new TokenValidationParameters {
-        ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
-        ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+        ValidIssuer = jwtOptions.Issuer,
+        ValidAudience = jwtOptions.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(
-                                                    Encoding.UTF8.GetBytes(Environment
-                                                                               .GetEnvironmentVariable("JWT_KEY")
-                                                                           ?? throw new
-                                                                               InvalidOperationException("JWT_KEY is invalid"))
+                                                    Encoding.UTF8.GetBytes(jwtOptions.Key)
                                                    ),
         ValidateIssuer = true,
         ValidateAudience = true,
