@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TescEvents.Migrations
 {
-    public partial class _0002AddAcceptingApplicationsColumn : Migration
+    public partial class _0003AddAcceptingApplicationsColumn : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
