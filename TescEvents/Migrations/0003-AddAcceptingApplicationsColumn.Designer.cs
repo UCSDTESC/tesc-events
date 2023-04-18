@@ -12,8 +12,8 @@ using TescEvents.Entities;
 namespace TescEvents.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20230418040311_0002-AddAcceptingApplicationsColumn")]
-    partial class _0002AddAcceptingApplicationsColumn
+    [Migration("0003-AddAcceptingApplicationsColumn")]
+    partial class _0003AddAcceptingApplicationsColumn
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
