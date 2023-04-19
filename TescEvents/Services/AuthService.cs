@@ -1,15 +1,22 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using TescEvents.Utilities;
 
 namespace TescEvents.Services; 
 
 public class AuthService : IAuthService {
+    private readonly JwtOptions jwtOptions;
+    public AuthService(IOptions<JwtOptions> jwtOptions) {
+        this.jwtOptions = jwtOptions.Value;
+    }
+    
     public string CreateJwt(Guid userId, string email) {
-        var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
-        var audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
-        var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY"));
+        var issuer = jwtOptions.Issuer;
+        var audience = jwtOptions.Audience;
+        var key = Encoding.ASCII.GetBytes(jwtOptions.Key);
         var tokenDescriptor = new SecurityTokenDescriptor {
             Subject = new ClaimsIdentity(new[] {
                 new Claim(ClaimTypes.Actor, userId.ToString()),

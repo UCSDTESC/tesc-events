@@ -9,8 +9,8 @@ This project is built on .NET 6, C# 10. It is assumed you have Docker CLI and Do
 1. Clone the repository with ssh: `git clone git@github.com:UCSDTESC/tesc-events.git`.
 2. Navigate to the directory: `cd tesc-events/TescEvents`.
 3. Install PostgreSQL. See [installation instructions below](#installing-postgres).
-4. Create a new `.env` file using [`.env.example`](#sample-env) as a template: `cp .env.example .env`.
-5. Fill out the `.env`.
+4. Create or overwrite the `appsettings.Development.json` file using [Sample appsettings.Development.json](#sample-appsettings.Development.json) as a template
+5. Fill out the `appsettings.Development.json` file.
 6. Run containerized services (e.g. PostgreSQL): `docker compose up -d`.
 7. Restore NuGet packages with: `dotnet restore`.
 8. Install Entity Framework Core tools: `dotnet tool install --global dotnet-ef`.
@@ -22,19 +22,39 @@ This project is built on .NET 6, C# 10. It is assumed you have Docker CLI and Do
 
 MacOS and Linux users can install Postgres version 14.5 via [Homebrew](https://brew.sh), and Linux users can use `apt`. Windows users will need to download the Postgres 14.5 installer from [here](https://www.postgresql.org/download/windows/), run the installer, and add the Postgres bin to the PATH environment variable.
 
-#### Sample `.env`
+#### Migrating the Database
+
+We use a code-first approach to our database migrations. This means every time we want to change the schema, we have to modify the schema within the code, then create a "migration" to upgrade the database.
+
+1. Modify the schema
+2. Run `dotnet ef migrations add [MIGRATION NAME HERE]`, e.g. `dotnet ef migrations add 0005-AddFirstNameColumnToUserTable`.
+3. In the `TescEvents/Migrations/` directory, ensure the class name of the created migration in `0005-AddFirstNameColumnToUserTable.cs` matches the form `_0005AddFirstNameColumnToUserTable`.
+4. In the `TescEvents/Migrations/` directory, ensure the annotation in `0005-AddFirstNameColumnToUserTable.Designer.cs`, matches the form `[Migration("0005-AddFirstNameColumnToUserTable")]`.
+5. Update the database with `dotnet ef database update`.
+
+#### Sample appsettings.Development.json
 
 ```
-DB_HOST=localhost
-DB_PORT=5432
-DB_DATABASE=tesc-events
-DB_USER=tesc-dev
-DB_PASS=password
-
-# JWT_KEY must be at least 128 bits long (16 characters)
-JWT_KEY=superultrahypermetasecretkey
-JWT_AUDIENCE=https://localhost:7208
-JWT_ISSUER=https://localhost:7208
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "Db": {
+    "Host": "localhost",
+    "Port": 5432,
+    "Database": "tesc-events",
+    "User": "tesc-dev",
+    "Password": "password"
+  },
+  "Jwt": {
+    "Key": "superultrahypermetasecretkey",
+    "Issuer": "https://localhost:7208",
+    "Audience": "https://localhost:7208"
+  }
+}
 ```
 
 **NOTE**: For Windows users, `localhost` won't work&mdash;you'll need to set `DB_HOST` to the Docker machine's IP address
