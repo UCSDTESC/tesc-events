@@ -9,7 +9,7 @@ This project is built on .NET 6, C# 10. It is assumed you have Docker CLI and Do
 1. Clone the repository with ssh: `git clone git@github.com:UCSDTESC/tesc-events.git`.
 2. Navigate to the directory: `cd tesc-events/TescEvents`.
 3. Install PostgreSQL. See [installation instructions below](#installing-postgres).
-4. Create or overwrite the `appsettings.Development.json` file using [Sample appsettings.Development.json](#sample-appsettings.Development.json) as a template
+4. Create or overwrite the `appsettings.Development.json` file using [Sample appsettings.Development.json](#sample-appsettingsdevelopmentjson) as a template
 5. Fill out the `appsettings.Development.json` file.
 6. Run containerized services (e.g. PostgreSQL): `docker compose up -d`.
 7. Restore NuGet packages with: `dotnet restore`.
