@@ -35,4 +35,25 @@ public class AuthService : IAuthService {
 
         return jwt;
     }
+
+    public Guid? ValidateJwt(string jwt) {
+        if (jwt.IsNullOrEmpty()) return null;
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(jwtOptions.Key);
+        try {
+            tokenHandler.ValidateToken(jwt, new TokenValidationParameters {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken);
+            JwtSecurityToken jwtToken = (JwtSecurityToken)validatedToken;
+            var userId = Guid.Parse(jwtToken.Claims.First(c => c.Type == ClaimTypes.Actor).Value);
+            return userId;
+        } catch {
+            return null;
+        }
+    }
 }

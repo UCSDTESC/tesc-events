@@ -18,4 +18,13 @@ public interface IEventService {
     /// <returns>The event associated with the eventId, or null if not found</returns>
     Event? GetEventDetails(Guid eventId);
 
+    /// <summary>
+    /// Register a user for an event
+    /// </summary>
+    /// <param name="eventId"></param>
+    /// <param name="studentId"></param>
+    void RegisterUserForEvent(Guid eventId, Guid studentId);
+
+    EventRegistration? GetEventRegistration(Guid registrationId);
+    EventRegistration? GetEventRegistration(Guid eventId, Guid studentId);
 }

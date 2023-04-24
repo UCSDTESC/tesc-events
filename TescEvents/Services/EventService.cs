@@ -23,4 +23,24 @@ public class EventService : IEventService {
         var currEvent = context.Events!.FirstOrDefault(e => e.Id == eventId);
         return currEvent;
     }
+
+    public void RegisterUserForEvent(Guid eventId, Guid studentId) {
+        var registration = new EventRegistration {
+            EventId = eventId,
+            StudentId = studentId,
+            UserStatus = UserStatus.Pending,
+            IsResumeSanitized = false,
+        };
+        context.EventRegistrations!.Add(registration);
+        context.SaveChanges();
+    }
+
+    public EventRegistration? GetEventRegistration(Guid registrationId) {
+        return context.EventRegistrations!.FirstOrDefault(e => e.Id == registrationId);
+    }
+
+    public EventRegistration? GetEventRegistration(Guid eventId, Guid studentId) {
+        return context.EventRegistrations!
+                      .FirstOrDefault(e => e.EventId == eventId && e.StudentId == studentId);
+    }
 }

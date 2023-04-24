@@ -23,6 +23,7 @@ public class EventRegistration {
 }
 
 public enum UserStatus {
+    Pending,
     Rejected,
     Accepted,
     Confirmed,
