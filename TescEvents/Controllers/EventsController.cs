@@ -1,4 +1,7 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using TescEvents.Models;
 using TescEvents.Services;
 
@@ -28,11 +31,16 @@ public class EventsController : ControllerBase {
         return eventService.GetFutureEvents();
     }
 
-    [HttpPost("{eventId:guid}/register")]
-    public IActionResult RegisterUserForEvent(Guid eventId, string jwt) {
-        Guid? userId = authService.ValidateJwt(jwt);
-        if (userId == null) return Forbid();
+    [HttpPost("event/{eventId:guid}/register"), Authorize]
+    public IActionResult RegisterUserForEvent(Guid eventId) {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        if (identity == null) return Forbid();
 
+        var actor = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Actor);
+        if (actor == null || actor.Value.IsNullOrEmpty()) return Forbid();
+
+        Guid? userId = Guid.Parse(actor.Value);
+        
         if (eventService.GetEventDetails(eventId) == null) return NotFound();
 
         if (eventService.GetEventRegistration(eventId, userId.Value) != null) return BadRequest();
