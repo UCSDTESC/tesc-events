@@ -10,13 +10,14 @@ This project is built on .NET 6, C# 10. It is assumed you have Docker CLI and Do
 2. Navigate to the directory: `cd tesc-events/TescEvents`.
 3. Install PostgreSQL. See [installation instructions below](#installing-postgres).
 4. Create or overwrite the `appsettings.Development.json` file using [Sample appsettings.Development.json](#sample-appsettingsdevelopmentjson) as a template
-5. Fill out the `appsettings.Development.json` file.
-6. Run containerized services (e.g. PostgreSQL): `docker compose up -d`.
-7. Restore NuGet packages with: `dotnet restore`.
-8. Install Entity Framework Core tools: `dotnet tool install --global dotnet-ef`.
-9. Verify the EF Core CLI is correctly installed: `dotnet ef`.
-10. Initialize the database: `dotnet ef database update`.
-11. Start the project: `dotnet run`.
+5. Create or overwrite the `.env` file using [Sample .env](#sample-env) (this is used for the database running in Docker)
+6. Fill out the `appsettings.Development.json` file.
+7. Run containerized services (e.g. PostgreSQL): `docker compose up -d`.
+8. Restore NuGet packages with: `dotnet restore`.
+9. Install Entity Framework Core tools: `dotnet tool install --global dotnet-ef`.
+10. Verify the EF Core CLI is correctly installed: `dotnet ef`.
+11. Initialize the database: `dotnet ef database update`.
+12. Start the project: `dotnet run`.
 
 #### Installing Postgres
 
@@ -55,6 +56,15 @@ We use a code-first approach to our database migrations. This means every time w
     "Audience": "https://localhost:7208"
   }
 }
+```
+
+#### Sample .env
+
+```
+DB_DATABASE="tesc-events"
+DB_USER="tesc-dev"
+DB_PASSWORD="password"
+DB_PORT=5432
 ```
 
 **NOTE**: For Windows users, `localhost` won't work&mdash;you'll need to set `DB_HOST` to the Docker machine's IP address
