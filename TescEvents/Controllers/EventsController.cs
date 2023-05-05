@@ -9,6 +9,7 @@ namespace TescEvents.Controllers;
 public class EventsController : ControllerBase {
     private readonly IEventService eventService;
 
+
     public EventsController(IEventService eventService) {
         this.eventService = eventService;
     }
@@ -25,4 +26,6 @@ public class EventsController : ControllerBase {
 
         return eventService.GetFutureEvents();
     }
+
+    
 }

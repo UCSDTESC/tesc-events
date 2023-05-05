@@ -2,7 +2,6 @@ using TescEvents.Models;
 
 namespace TescEvents.Services; 
 
-// TODO: include start and end dates 
 public interface IEventService {
 
     /// <summary>
